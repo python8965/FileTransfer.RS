@@ -23,8 +23,6 @@ const CTRLCHAR_SIZE: usize = 1024;
 const METASERVER_BUFFER_SIZE: usize = 128;
 const METASERVER_PORT: u16 = 47103;
 const PORT: u16 = 47102;
-const METASERVER_ADDRESS: SocketAddr =
-    SocketAddr::V4(SocketAddrV4::new(Ipv4Addr::LOCALHOST, METASERVER_PORT));
 
 const CALLBACK_IP: Ipv4Addr = Ipv4Addr::new(127,0,0,1);
 const DEFAULT_IP: Ipv4Addr = Ipv4Addr::new(58,229,94,229);

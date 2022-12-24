@@ -2,7 +2,6 @@ use crate::file_io::FileSystem;
 use crate::network::{FileDownloaderUi, FileSenderUi};
 
 #[derive(serde::Deserialize, serde::Serialize)]
-#[serde(default)]
 pub struct MyApp {
     state: State,
 }

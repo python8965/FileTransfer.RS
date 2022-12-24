@@ -16,11 +16,9 @@ eframe = { version = "0.20.1", default-features = false, features = [
 ] }
 
 anyhow = "1.0.66"
-rand = "0.8.5"
 log = "0.4.17"
-simple_logger = { version =  "4.0.0", default-features = false, features = ["colors", "stderr"] }
+simple_logger = { version =  "4.0.0", default-features = false, features = ["colors"] }
 
-getrandom = { version = "0.2", features = ["js"] }
 colored = "2.0.0"
 
 once_cell = "1.16.0"
