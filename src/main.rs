@@ -4,7 +4,7 @@ extern crate core;
 
 use crate::app::MyApp;
 use crate::file_io::{DOWNLOAD_PATH, UPLOAD_PATH};
-use eframe::Renderer;
+
 use log::{debug, info};
 use simple_logger::SimpleLogger;
 use std::fs;
