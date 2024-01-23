@@ -1,4 +1,4 @@
-use crate::file_io::FileSystem;
+use crate::io::FileSystem;
 use crate::network::{FileDownloaderUi, FileSenderUi};
 
 #[derive(serde::Deserialize, serde::Serialize)]

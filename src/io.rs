@@ -1,12 +1,9 @@
-﻿use egui::{self, trace, Ui};
+﻿use egui::{self, Ui};
 use once_cell::sync::Lazy;
 use std::path::{Path, PathBuf};
 use std::{fs, io};
-use log::debug;
+use tracing::debug;
 
-pub static ROOT_PATH: Lazy<&Path> = Lazy::new(|| Path::new(".\\root\\"));
-pub static DOWNLOAD_PATH: Lazy<&Path> = Lazy::new(|| Path::new(".\\root\\downloads\\"));
-pub static UPLOAD_PATH: Lazy<&Path> = Lazy::new(|| Path::new(".\\root\\uploads\\"));
 
 #[derive(Default, Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct FileInfo {

@@ -3,21 +3,20 @@
 extern crate core;
 
 use crate::app::MyApp;
-use crate::file_io::{DOWNLOAD_PATH, UPLOAD_PATH};
 
-use log::{debug, info};
+use tracing::{debug, info};
 use simple_logger::SimpleLogger;
 use std::fs;
 
 mod app;
-mod file_io;
+mod io;
 mod network;
 mod tool;
+mod db;
 
 fn init() {
     debug!(
         "DOWNLOAD PATH IS EXIST?: {}",
-        DOWNLOAD_PATH.try_exists().unwrap()
     );
 
     if !DOWNLOAD_PATH.try_exists().unwrap() {

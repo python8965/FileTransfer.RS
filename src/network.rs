@@ -10,12 +10,12 @@ use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream};
 
 use std::str::FromStr;
 
-use log::debug;
+use tracing::debug;
 use std::thread;
 use std::thread::sleep;
 use std::time::Duration;
 
-use crate::file_io::{FileInfo, DOWNLOAD_PATH};
+use crate::io::{FileInfo, DOWNLOAD_PATH};
 
 const BUFFER_SIZE: usize = 1024 * 16 * 16 * 16;
 const CTRLCHAR_SIZE: usize = 1024;
