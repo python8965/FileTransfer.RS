@@ -4,6 +4,8 @@ use std::path::{Path, PathBuf};
 use std::{fs, io};
 use tracing::debug;
 
+pub static UPLOAD_PATH: Lazy<PathBuf> = Lazy::new(|| PathBuf::from("./upload"));
+pub static DOWNLOAD_PATH: Lazy<PathBuf> = Lazy::new(|| PathBuf::from("./download"));
 
 #[derive(Default, Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct FileInfo {
@@ -135,7 +137,7 @@ fn folder_ui(ui: &mut Ui, folder: &mut FolderInfo, _selected: &mut bool, selecte
 }
 
 fn selected(folder: &mut FolderInfo, is_selected: &mut bool, selected_files: &mut Vec<FileInfo> ){
-    for mut file_system_element in &mut folder.elements {
+    for file_system_element in &mut folder.elements {
         match file_system_element {
             FileSystemElement::Folder(folder, _selected) => {
                 debug!("{:?} {:?}", is_selected, _selected);
@@ -191,8 +193,8 @@ fn scan_root_folder() -> io::Result<FolderInfo> {
 
         Ok(())
     }
-    let mut root = FolderInfo::new(*UPLOAD_PATH, dir_size(*UPLOAD_PATH)? as usize, vec![]);
-    scan(fs::read_dir(*UPLOAD_PATH)?, &mut root.elements)?;
+    let mut root = FolderInfo::new(&*UPLOAD_PATH, dir_size(UPLOAD_PATH.clone())? as usize, vec![]);
+    scan(fs::read_dir(&*UPLOAD_PATH)?, &mut root.elements)?;
     Ok(root)
 }
 

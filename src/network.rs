@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpListener, TcpStream};
+use std::net::{Ipv4Addr, SocketAddrV4, TcpListener, TcpStream};
 
 use std::str::FromStr;
 
@@ -20,11 +20,8 @@ use crate::io::{FileInfo, DOWNLOAD_PATH};
 const BUFFER_SIZE: usize = 1024 * 16 * 16 * 16;
 const CTRLCHAR_SIZE: usize = 1024;
 
-const METASERVER_BUFFER_SIZE: usize = 128;
-const METASERVER_PORT: u16 = 47103;
 const PORT: u16 = 47102;
 
-const CALLBACK_IP: Ipv4Addr = Ipv4Addr::new(127,0,0,1);
 const DEFAULT_IP: Ipv4Addr = Ipv4Addr::new(58,229,94,229);
 const MY_IP:Ipv4Addr =Ipv4Addr::new(192,168,55,47);
 
@@ -71,14 +68,12 @@ impl FileSenderUi {
 #[derive(Default)]
 pub struct FileDownloaderUi {
     addr_str: String,
-    connection_label: String,
 }
 
 impl FileDownloaderUi {
     pub fn new() -> Self {
         Self {
             addr_str: DEFAULT_IP.to_string(),
-            connection_label: "".to_string(),
         }
     }
 
@@ -236,54 +231,4 @@ fn try_receive_control(stream: &mut TcpStream) -> anyhow::Result<Message> {
     let size = stream.read(&mut buffer)?; // send StartDownload(usize) message
     debug!("ctrlsize : {:?}", size);
     Ok(MPDeserialize::<Message>(&buffer)?)
-}
-/////////////////////////////////////////////////
-
-/////////////////////////////////////////////////
-
-// struct InfoServer {}
-//
-// impl InfoServer {
-//     fn from(addr: SocketAddr) -> Self {
-//         Self {}
-//     }
-//
-//     fn run(self) {}
-//
-//     fn get_info(self) {}
-//
-//     fn serve_info(self) {}
-// }
-
-#[derive(Serialize, Deserialize, Clone, Debug)]
-struct ServerInfo {
-    name: String,
-
-    addr: SocketAddr,
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, Default)]
-struct MetaServerData {
-    server: Vec<ServerInfo>,
-}
-//Client (query)<->(Ip Table) IPServer , Server (send)<->(request) Client
-
-//s -> server, c-> client, m-> metaserver
-//use (flexbuffer)
-//s -> m serverinfo
-//m -> c serverinfolist
-
-//s <-> c filetree
-//c -> s file request tree
-//s -> c file data
-//c . save
-
-trait Empty {
-    fn empty(&mut self);
-}
-
-impl Empty for [u8] {
-    fn empty(&mut self) {
-        self.iter_mut().for_each(|x| *x = 0);
-    }
 }

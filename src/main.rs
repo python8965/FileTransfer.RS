@@ -7,25 +7,26 @@ use crate::app::MyApp;
 use tracing::{debug, info};
 use simple_logger::SimpleLogger;
 use std::fs;
+use crate::io::{DOWNLOAD_PATH, UPLOAD_PATH};
 
 mod app;
 mod io;
 mod network;
 mod tool;
-mod db;
 
 fn init() {
     debug!(
-        "DOWNLOAD PATH IS EXIST?: {}",
+        "DOWNLOAD PATH IS EXIST?: {:?}",
+        DOWNLOAD_PATH.try_exists()
     );
 
     if !DOWNLOAD_PATH.try_exists().unwrap() {
         debug!("PATH : {}", DOWNLOAD_PATH.to_str().unwrap());
-        fs::create_dir_all(*DOWNLOAD_PATH).unwrap();
+        fs::create_dir_all(&*DOWNLOAD_PATH).unwrap();
     }
 
     if !UPLOAD_PATH.try_exists().unwrap() {
-        fs::create_dir_all(*UPLOAD_PATH).unwrap();
+        fs::create_dir_all(&*UPLOAD_PATH).unwrap();
     }
 }
 // When compiling natively:
@@ -38,10 +39,10 @@ fn main() {
     // Log to stdout (if you run with `RUST_LOG=debug`).
     let native_options = eframe::NativeOptions::default();
 
-    eframe::run_native(
+    let _ = eframe::run_native(
         "eframe template",
         native_options,
-        Box::new(|_cc| Box::new(MyApp::new())),
+        Box::new(|_cc| Ok(Box::new(MyApp::new()))),
     );
 }
 
