@@ -168,34 +168,42 @@ fn selected(folder: &mut FolderInfo, is_selected: &mut bool, selected_files: &mu
 }
 
 fn scan_root_folder() -> io::Result<FolderInfo> {
-    fn scan(dir: fs::ReadDir, data: &mut Vec<FileSystemElement>) -> io::Result<()> {
-        for res in dir {
-            let dir_entry = res.expect("err in direntry");
-
-            let path = dir_entry.path();
-
-            match dir_entry.metadata()? {
-                meta if meta.is_dir() => {
-                    let mut folder = FolderInfo::new(dir_entry.path(), meta.len() as usize, vec![]);
-
-                    scan(fs::read_dir(path)?, &mut folder.elements)?;
-                    data.push(FileSystemElement::Folder(Box::from(folder), false));
-                }
-                meta if meta.is_file() => {
-                    data.push(FileSystemElement::File(
-                        FileInfo::new(dir_entry.path(), meta.len() as usize),
-                        false,
-                    ));
-                }
-                _ => {}
-            }
-        }
-
-        Ok(())
+    #[cfg(target_arch = "wasm32")]
+    {
+        Ok(FolderInfo::new(&*UPLOAD_PATH, 0, vec![]))
     }
-    let mut root = FolderInfo::new(&*UPLOAD_PATH, dir_size(UPLOAD_PATH.clone())? as usize, vec![]);
-    scan(fs::read_dir(&*UPLOAD_PATH)?, &mut root.elements)?;
-    Ok(root)
+
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        fn scan(dir: fs::ReadDir, data: &mut Vec<FileSystemElement>) -> io::Result<()> {
+            for res in dir {
+                let dir_entry = res.expect("err in direntry");
+
+                let path = dir_entry.path();
+
+                match dir_entry.metadata()? {
+                    meta if meta.is_dir() => {
+                        let mut folder = FolderInfo::new(dir_entry.path(), meta.len() as usize, vec![]);
+
+                        scan(fs::read_dir(path)?, &mut folder.elements)?;
+                        data.push(FileSystemElement::Folder(Box::from(folder), false));
+                    }
+                    meta if meta.is_file() => {
+                        data.push(FileSystemElement::File(
+                            FileInfo::new(dir_entry.path(), meta.len() as usize),
+                            false,
+                        ));
+                    }
+                    _ => {}
+                }
+            }
+
+            Ok(())
+        }
+        let mut root = FolderInfo::new(&*UPLOAD_PATH, dir_size(UPLOAD_PATH.clone())? as usize, vec![]);
+        scan(fs::read_dir(&*UPLOAD_PATH)?, &mut root.elements)?;
+        Ok(root)
+    }
 }
 
 fn dir_size(path: impl Into<PathBuf>) -> io::Result<u64> {
